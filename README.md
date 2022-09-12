@@ -114,3 +114,27 @@ If you find this project useful for your research, please use the following BibT
       booktitle={ECCV},
       year={2022}
     }
+
+
+
+#### CPUUUUUU
+build the docker container
+`cog build -t detic-cpu2`
+
+Run the container
+`docker run -d -p 5000:5000 detic-cpu2`
+
+Verify the container is running
+`docker logs 7d5dc0fcade1`
+
+Make an api call
+```bash
+curl http://localhost:5000/predictions -X POST -H "Content-Type: application/json"   -d '{"input": {
+    "image": "https://kevsbest.com/wp-content/uploads/2021/11/pexels-charlotte-may-5824883.jpg",
+    "custom_vocabulary": "wall,carpet,oven,dishwasher,sink,faucet,window,door,pool table,wall socket,refrigerator,rug,cabinet,table,sofa,light switch,mirror,toilet,grill,exercise equipment,map"
+  }}' | jq .output | tr -d '"' | cut -d',' -f2  | base64 -d > image2.jpg  && xdg-open image2.jpg
+```
+
+![before](https://kevsbest.com/wp-content/uploads/2021/11/pexels-charlotte-may-5824883.jpg)
+![after](https://i.postimg.cc/zBQt5DVb/image2.jpg)
+
