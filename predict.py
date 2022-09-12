@@ -18,7 +18,13 @@ from detic.config import add_detic_config
 from detic.modeling.utils import reset_cls_test
 from detic.modeling.text.text_encoder import build_text_encoder
 
-class Predictor(cog.Predictor):
+
+from cog import BasePredictor, Input, Path
+
+#help(cog)
+
+class Predictor(BasePredictor):
+        #cog.Predictor):
     def setup(self):
         cfg = get_cfg()
         add_centernet_config(cfg)
@@ -28,6 +34,7 @@ class Predictor(cog.Predictor):
         cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.5  # set threshold for this model
         cfg.MODEL.ROI_BOX_HEAD.ZEROSHOT_WEIGHT_PATH = 'rand'
         cfg.MODEL.ROI_HEADS.ONE_CLASS_PER_PROPOSAL = True
+        cfg.MODEL.DEVICE='cpu';
         self.predictor = DefaultPredictor(cfg)
         self.BUILDIN_CLASSIFIER = {
             'lvis': 'datasets/metadata/lvis_v1_clip_a+cname.npy',
@@ -42,25 +49,11 @@ class Predictor(cog.Predictor):
             'coco': 'coco_2017_val',
         }
 
-    @cog.input(
-        "image",
-        type=Path,
-        help="input image",
-    )
-    @cog.input(
-        "vocabulary",
-        type=str,
-        default='lvis',
-        options=['lvis', 'objects365', 'openimages', 'coco', 'custom'],
-        help="Choose vocabulary",
-    )
-    @cog.input(
-        "custom_vocabulary",
-        type=str,
-        default=None,
-        help="Type your own vocabularies, separated by coma ','",
-    )
-    def predict(self, image, vocabulary, custom_vocabulary):
+    def predict(self, 
+        image: Path = Input(description="input image"),
+        vocabulary: str = Input(default='lvis',choices=['lvis', 'objects365', 'openimages', 'coco', 'custom'],description="Choose vocabulary"),
+        custom_vocabulary: str = Input(default=None,description="Type your own vocabularies, separated by coma ','"),
+        ) -> Path:
         image = cv2.imread(str(image))
         if not vocabulary == 'custom':
             metadata = MetadataCatalog.get(self.BUILDIN_METADATA_PATH[vocabulary])
