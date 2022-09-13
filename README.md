@@ -118,6 +118,9 @@ If you find this project useful for your research, please use the following BibT
 
 
 #### CPUUUUUU
+
+Install cog: https://github.com/replicate/cog
+
 build the docker container
 `cog build -t detic-cpu2`
 
