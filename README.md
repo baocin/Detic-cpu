@@ -119,6 +119,7 @@ If you find this project useful for your research, please use the following BibT
 
 #### CPUUUUUU
 
+Install docker: https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository
 Install cog: https://github.com/replicate/cog
 
 build the docker container
